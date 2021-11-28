@@ -1,0 +1,48 @@
+/**
+ *
+ * You can write your CSS code here, DO NOT touch the default JavaScript file
+ * because it will make it harder for you to update.
+ * 
+ */
+
+/*# sourceMappingURL=custom.css.map */
+/*================== Hero =================== */
+.card.card-statistic-2 .card-body {
+    font-size: 18px;
+}
+
+.main-sidebar .sidebar-menu li ul.dropdown-menu li a {
+    height: auto;
+}
+
+body.sidebar-mini .main-sidebar .sidebar-menu>li ul.dropdown-menu li a {
+    height: auto;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+
+
+
+/* ============= Dana Masuk ==================== */
+
+
+.datepickercustom .input-group-text {
+    padding: 5px 15px;
+    height: auto;
+}
+
+.card .card-header h4+.card-header-action .datepickercustom .form-control,
+.card .card-header h4+.card-header-form .datepickercustom .form-control {
+    border-radius: 0px 30px 30px 0px !important;
+}
