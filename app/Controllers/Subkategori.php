@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use Exception;
 
 class Subkategori extends BaseController
 {
@@ -29,9 +30,6 @@ class Subkategori extends BaseController
             'sideBar' => $this->sideBar
         ];
 
-        // d($data['subkategori']);
-        // dd(array_search(3, array_column($data['subkategori'], 'id')));
-
         return view('transaksi/subkategori', $data);
     }
 
@@ -43,8 +41,7 @@ class Subkategori extends BaseController
             'subkategori' => 'required|is_unique[subkategori.subkategori]',
             'id_kategori' => 'required'
         ])) {
-            $validation = \Config\Services::validation();
-            return redirect()->to('/subkategori')->withInput()->with('validation', $validation);
+            return redirect()->to($_SERVER['HTTP_REFERER'])->withInput();
         }
 
         $slug = url_title($this->request->getVar("subkategori"), '-', true);
@@ -57,19 +54,21 @@ class Subkategori extends BaseController
 
         session()->setFlashData('pesan', 'Data Berhasil Ditambahkan');
         session()->setFlashData('status', 'success');
-
-        return redirect()->to('/subkategori');
+        return redirect()->to($_SERVER['HTTP_REFERER']);
     }
 
     public function delete($id)
     {
+        try {
+            $this->subkategoriModel->delete($id);
+            session()->setFlashData('pesan', 'Data Berhasil Dihapus');
+            session()->setFlashData('status', 'success');
+        } catch (Exception $e) {
+            session()->setFlashData('pesan', 'Data Gagal Dihapus. ' . ($e->getCode() == 1451 ? 'Data yang dihapus masih berkaitan dengan tabel transaksi' : ''));
+            session()->setFlashData('status', 'error');
+        };
 
-        $this->subkategoriModel->delete($id);
-
-        session()->setFlashData('pesan', 'Data Berhasil Dihapus');
-        session()->setFlashData('status', 'success');
-
-        return redirect()->to('/subkategori');
+        return redirect()->to($_SERVER['HTTP_REFERER']);
     }
 
     public function edit($id)
@@ -91,8 +90,7 @@ class Subkategori extends BaseController
             'subkategori' => $rule,
             'id_kategori' => 'required'
         ])) {
-            $validation = \Config\Services::validation();
-            return redirect()->to('/subkategori')->withInput()->with('validation', $validation);
+            return redirect()->to($_SERVER['HTTP_REFERER'])->withInput();
         }
 
         $slug = url_title($this->request->getVar("subkategori"), '-', true);
@@ -106,6 +104,6 @@ class Subkategori extends BaseController
         session()->setFlashData('pesan', 'Data Berhasil Diubah');
         session()->setFlashData('status', 'success');
 
-        return redirect()->to('/subkategori');
+        return redirect()->to($_SERVER['HTTP_REFERER']);
     }
 }

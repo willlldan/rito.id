@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use Exception;
 
 class Kategori extends BaseController
 {
@@ -61,11 +62,14 @@ class Kategori extends BaseController
 
     public function delete($id)
     {
-
-        $this->kategoriModel->delete($id);
-
-        session()->setFlashData('pesan', 'Data Berhasil Dihapus');
-        session()->setFlashData('status', 'success');
+        try {
+            $this->kategoriModel->delete($id);
+            session()->setFlashData('pesan', 'Data Berhasil Dihapus');
+            session()->setFlashData('status', 'success');
+        } catch (Exception $e) {
+            session()->setFlashData('pesan', 'Data Gagal Dihapus. ' . ($e->getCode() == 1451 ? 'Data yang dihapus masih berkaitan dengan tabel sub kategori' : ''));
+            session()->setFlashData('status', 'error');
+        };
 
         return redirect()->to($_SERVER['HTTP_REFERER']);
     }

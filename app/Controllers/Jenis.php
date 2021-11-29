@@ -86,8 +86,7 @@ class Jenis extends BaseController
         if (!$this->validate([
             'jenis' => $rule
         ])) {
-            $validation = \Config\Services::validation();
-            return redirect()->to('/jenis')->withInput()->with('validation', $validation);
+            return redirect()->to($_SERVER['HTTP_REFERER'])->withInput();
         }
 
         $slug = url_title($this->request->getVar("jenis"), '-', true);
@@ -100,6 +99,6 @@ class Jenis extends BaseController
         session()->setFlashData('pesan', 'Data Berhasil Diubah');
         session()->setFlashData('status', 'success');
 
-        return redirect()->to('/jenis');
+        return redirect()->to($_SERVER['HTTP_REFERER']);
     }
 }
