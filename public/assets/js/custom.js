@@ -43,6 +43,11 @@ $('.btn-delete').on('click', function(e) {
       })
 })
 
+// Number to currency format
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 
 
 // Modal Jenis Transaksi
@@ -141,10 +146,81 @@ $('#formSubkategoriModal').on('shown.bs.modal', function (event) {
 
 // Modal Transaksi
 
-$('#formDanaMasukModal').on('shown.bs.modal', function (event) {
+$('#formTransaksiModal').on('shown.bs.modal', function (event) {
   $(this).find('form input:visible:first').focus()
 })
 
+// Modal Upload
+$('#formUploadModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) 
+  var id = button.data('id')
+
+  var modal = $(this)
+  modal.find('#id').val(id)
+
+})
+
+// Modal Detail
+$('#detailModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) 
+  var id = button.data('id') 
+  var jenis = button.data('jenis') 
+  var kategori = button.data('kategori') 
+  var subkategori = button.data('subkategori') 
+  var transaksi = button.data('transaksi') 
+  var tanggal = button.data('tanggal') 
+  var keterangan = button.data('keterangan') 
+  var jumlah = 'Rp. ' +  numberWithCommas(button.data('jumlah')) 
+  var bukti = button.data('bukti') 
+
+
+ 
+
+  var modal = $(this)
+  modal.find('#detailTransaksi').text(transaksi)
+  modal.find('#detailJenis').text(jenis)
+  modal.find('#detailKategori').text(kategori)
+  modal.find('#detailSubKategori').text(subkategori)
+  modal.find('#detailTanggal').text(tanggal)
+  modal.find('#detailKeterangan').text(keterangan)
+  modal.find('#detailJumlah').text(jumlah)
+
+  modal.find('.kosong').addClass('d-none')
+  modal.find('.ada').addClass('d-none')
+
+  if(!bukti) {
+    modal.find('.kosong').addClass('d-block')
+    modal.find('.ada').removeClass('d-block')
+    modal.find('#upload-btn').attr('data-id', id)
+  } else {
+    modal.find('.ada').addClass('d-block')
+    modal.find('.kosong').removeClass('d-block')
+
+  }
+
+
+}) 
+
+
+
+// Preview Upload
+
+function previewImg(id) {
+  const fileUpload = $(id+' input.custom-file-input')
+  const fileUploadLabel = $(id+' .custom-file-label')
+  const imgPreview = $(id+ ' .img-preview')
+  
+
+  fileUploadLabel[0].textContent = fileUpload[0].files[0].name
+  
+  const filePreview = new FileReader()
+  filePreview.readAsDataURL(fileUpload[0].files[0])
+  
+  filePreview.onload = function(e) {
+    imgPreview[0].src = e.target.result
+  }
+
+}
 
 // Auto Numbering
 
@@ -154,6 +230,10 @@ new AutoNumeric('#jumlah', {
   digitGroupSeparator: '.',
   unformatOnSubmit: true
 })
+
+
+
+
 
 
 

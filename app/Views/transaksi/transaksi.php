@@ -10,10 +10,9 @@
                     <div class="card-header">
                         <h4><?= $jenis['jenis'] . " - " . $kategori['kategori'] ?></h4>
                         <div class="card-header-form">
-
                             <div class="form-row">
                                 <div class="form-group col-md-3">
-                                    <button href="" class="btn btn-primary btn-icon icon-left" id="add" data-toggle="modal" data-target="#formDanaMasukModal" data-title="Tambah Data" data-link="add"><i class="fas fa-plus"></i> Tambah Data</button>
+                                    <button href="" class="btn btn-primary btn-icon icon-left" id="add" data-toggle="modal" data-target="#formTransaksiModal" data-title="Tambah Data" data-link="add"><i class="fas fa-plus"></i> Tambah Data</button>
                                 </div>
                                 <div class="form-group col-md-5">
                                     <div class="input-group datepickercustom">
@@ -34,8 +33,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
 
@@ -52,7 +49,7 @@
                                     <p class="lead">
                                         Sorry we can't find any data, to get rid of this message, make at least 1 entry.
                                     </p>
-                                    <button href="" class="btn btn-primary btn-icon icon-left mt-4" id="add" data-toggle="modal" data-target="#formDanaMasukModal" data-title="Tambah Data" data-link="/kategori/add"><i class="fas fa-plus"></i> Tambah Data</button>
+                                    <button href="" class="btn btn-primary btn-icon icon-left mt-4" id="add" data-toggle="modal" data-target="#formTransaksiModal" data-title="Tambah Data" data-link="/kategori/add"><i class="fas fa-plus"></i> Tambah Data</button>
                                 </div>
                             </div>
                         <?php else : ?>
@@ -60,39 +57,65 @@
                             <div class="table-responsive">
                                 <table class="table table-striped">
                                     <tr align="center">
+                                        <th style="width: 5%;">No.</th>
                                         <th>Tanggal</th>
                                         <th>Transaksi</th>
-                                        <th>Sub Kategori</th>
                                         <th>Keterangan</th>
+                                        <th>Sub Kategori</th>
                                         <th>Jumlah</th>
-                                        <th>User</th>
-                                        <th>Action</th>
+                                        <!-- <th>User</th> -->
+                                        <th style="width: 18%;">Action</th>
                                     </tr>
-
+                                    <?php $i = 1 + (10 * ($currentPage - 1)); ?>
                                     <?php foreach ($transaksi as $tr) : ?>
                                         <tr align="center">
-                                            <td><?= $tr['created_at'] ?></td>
+                                            <td><?= $i++ ?></td>
+                                            <td><?= explode(" ", $tr['created_at'])[0] ?></td>
                                             <td><?= $tr['transaksi'] ?></td>
+                                            <td><?= $tr['keterangan'] ?></td>
                                             <td class="align-middle">
                                                 <?php if ($tr['id_sub_kategori']) {
 
                                                     $idSub = array_search($tr['id_sub_kategori'], array_column($subkategori, 'id'));
 
-                                                    echo $subkategori[$idSub]['subkategori'];
+                                                    $labelSub = $subkategori[$idSub]['subkategori'];
                                                 } else {
-                                                    echo "-";
-                                                } ?>
+                                                    $labelSub = "-";
+                                                }
+                                                echo $labelSub
+
+                                                ?>
                                             </td>
-                                            <td class="align-middle">
-                                                <?= $tr['keterangan'] ?>
-                                            </td>
+
                                             <td>
                                                 <?= "Rp. " . number_format($tr['jumlah'], 0, ',', '.')  ?>
                                             </td>
-                                            <td>
+                                            <!-- <td>
                                                 <img alt="image" src="<?= base_url() ?>/assets/img/avatar/avatar-5.png" class="rounded-circle" width="35" data-toggle="tooltip" title="Acep Hendra">
+                                            </td> -->
+                                            <td>
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-primary" data-toggle="modal" data-target="#detailModal" data-id="<?= $tr['id'] ?>" data-jenis="<?= $jenis['jenis'] ?>" data-kategori="<?= $kategori['kategori'] ?>" data-subkategori="<?= $labelSub ?>" data-transaksi="<?= $tr['transaksi'] ?>" data-tanggal="<?= $tr['created_at'] ?>" data-keterangan="<?= $tr['keterangan'] ?>" data-jumlah="<?= $tr['jumlah'] ?>" data-bukti="<?= $tr['bukti_transaksi'] ?>">
+
+
+                                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="Detail"></i></button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <button class="btn btn-warning" data-toggle="modal" data-target="#formUploadModal" data-id='<?= $tr['id'] ?>'>
+                                                            <i class="fas fa-arrow-circle-up" data-toggle="tooltip" title="Upload Bukti Transaksi"></i></button>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <form action="/kategori/<?= $tr['id'] ?>" method="post" class="d-inline">
+                                                            <?= csrf_field() ?>
+                                                            <input type="hidden" name="_method" value="DELETE">
+                                                            <button type="submit" class="btn btn-danger btn-delete"><i class="fas fa-trash" data-toggle="tooltip" title="Hapus Data"></i></button>
+                                                        </form>
+
+                                                    </div>
+
+                                                </div>
                                             </td>
-                                            <td><a href="#" class="btn btn-danger">Delete</a></td>
                                         </tr>
                                     <?php endforeach ?>
 
@@ -117,7 +140,7 @@
 
 <!-- Modal -->
 
-<div class="modal fade" tabindex="-1" role="dialog" id="formDanaMasukModal">
+<div class="modal fade" tabindex="-1" role="dialog" id="formTransaksiModal">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -127,7 +150,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="../add" method="post">
+                <form action="<?= base_url() ?>/transaksi/add" method="post" enctype="multipart/form-data">
                     <?= csrf_field() ?>
                     <input type="hidden" name="jenis" value="<?= $jenis['id'] ?>">
                     <input type="hidden" name="kategori" value="<?= $kategori['id'] ?>">
@@ -157,6 +180,22 @@
                         </div>
                     </div>
 
+                    <?php if ($jenis['slug'] == "dana-keluar") : ?>
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <img width="100" src="<?= base_url() ?>/assets/img/default.png" class="img-thumbnail img-preview" alt="">
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input <?= ($validation->hasError('buktiTransaksi')) ? 'is-invalid' : ''  ?>" id="buktiTransaksi" name="buktiTransaksi" onchange="previewImg('#formTransaksiModal')" value="<?= old('buktiTransaksi') ?>">
+                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                    <div class="invalid-feedback mt-3"><?= $validation->getError('buktiTransaksi') ?></div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+
             </div>
             <div class="modal-footer bg-whitesmoke br">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -167,9 +206,135 @@
     </div>
 </div>
 
-<?php if (!empty($validation->getErrors())) : ?>
+<!-- Detail Upload -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="detailModal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center">Detail Transaksi Transaksi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <tr>
+                        <td>Transaksi</td>
+                        <td id="detailTransaksi">3333333 </td>
+                    </tr>
+                    <tr>
+                        <td>Jenis</td>
+                        <td id="detailJenis">3333333 </td>
+                    </tr>
+                    <tr>
+                        <td>Kategori</td>
+                        <td id="detailKategori">3333333 </td>
+                    </tr>
+                    <tr>
+                        <td>Sub Kategori</td>
+                        <td id="detailSubKategori">3333333 </td>
+                    </tr>
+                    <tr>
+                        <td>Tanggal Transaksi</td>
+                        <td id="detailTanggal">3333333 </td>
+                    </tr>
+                    <tr>
+                        <td>Keterangan</td>
+                        <td id="detailKeterangan">3333333 </td>
+                    </tr>
+                    <tr>
+                        <td>Jumlah</td>
+                        <td id="detailJumlah"> </td>
+                    </tr>
+                    <!-- <tr>
+                        <td>Ditambahkan Oleh</td>
+                        <td id="detailUser"> </td>
+                    </tr> -->
+                </table>
+
+                <h6>Bukti Transaksi</h6>
+
+                <div class="chocolat-parent ada">
+                    <div class="text-center">
+                        <!-- <img src="<?= base_url() ?>/assets/img/default.png" class="img-fluid bukti-transaksi"> -->
+                        <img src="<?= base_url() ?>/assets/img/bukti_transaksi/1638086558_29dd6752a7ed9ce1bc29.png" class="img-fluid bukti-transaksi">
+                    </div>
+                </div>
+
+                <div class="card-body p-0 kosong">
+                    <div class="empty-state" data-height="400">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-question"></i>
+                        </div>
+                        <h2>Bukti Transaksi Belum Ditambahkan</h2>
+                        <button href="" class="btn btn-primary btn-icon icon-left mt-4" id="upload-btn" data-toggle="modal" data-target="#formUploadModal" data-title="Tambah Data" data-link="/kategori/add"><i class="fas fa-plus"></i> Upload Bukti Transaksi</button>
+                    </div>
+                </div>
+
+
+            </div>
+            <!-- <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div> -->
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Upload -->
+
+<div class="modal fade" tabindex="-1" role="dialog" id="formUploadModal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Upload Bukti Transaksi</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="<?= base_url() ?>/transaksi/upload" method="post" enctype="multipart/form-data">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="id" id="id">
+
+                    <?php if ($jenis['slug'] == "dana-keluar") : ?>
+                        <div class="form-group row">
+                            <div class="col-sm-3">
+                                <img width="100" src="<?= base_url() ?>/assets/img/default.png" class="img-thumbnail img-preview" alt="">
+                            </div>
+                            <div class="col-sm-9">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input <?= ($validation->hasError('upload')) ? 'is-invalid' : ''  ?>" id="upload" name="upload" onchange="previewImg('#formUploadModal')" value="<?= old('upload') ?>">
+                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                    <div class="invalid-feedback mt-3"><?= $validation->getError('upload') ?></div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+
+            </div>
+            <div class="modal-footer bg-whitesmoke br">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary btn-form">Upload</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<?php if (!empty($validation->getErrors()) && session()->getFlashData('from') == "upload") :  ?>
     <script>
-        $('#formDanaMasukModal').modal('show')
+        $('#formUploadModal').modal('show')
+    </script>
+
+<?php elseif (!empty($validation->getErrors())) : ?>
+    <script>
+        $('#formTransaksiModal').modal('show')
     </script>
 
 <?php endif; ?>

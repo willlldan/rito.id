@@ -21,11 +21,6 @@
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-money-bill-wave"></i><span>Dana Masuk</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="<?= base_url() ?>/danamasuk">Regular</a></li>
-                    <li><a class="nav-link" href="<?= base_url() ?>/danamasuk/nonregular">Non-Regular</a></li>
-                    <li><a class="nav-link" href="<?= base_url() ?>/danamasuk/laboratorium
-                    ">Laboratorium</a></li>
-
                     <?php foreach ($sideBar as $sb) : ?>
                         <?php if ($sb['jenis_slug'] == 'dana-masuk') :  ?>
                             <li><a class="nav-link" href="<?= base_url() . "/transaksi/" . $sb['jenis_slug'] .  "/" . $sb['slug'] ?>"><?= $sb['kategori'] ?></a></li>

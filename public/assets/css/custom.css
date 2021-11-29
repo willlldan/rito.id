@@ -46,3 +46,9 @@ input[type=number] {
 .card .card-header h4+.card-header-form .datepickercustom .form-control {
     border-radius: 0px 30px 30px 0px !important;
 }
+
+/* ============= Detail Modal ====================*/
+
+.bukti-transaksi {
+    max-width: 75%;
+}

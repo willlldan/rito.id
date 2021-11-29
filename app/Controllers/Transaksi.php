@@ -10,6 +10,10 @@ class Transaksi extends BaseController
 {
     public function index($jenis = NULL, $kategori = NULL)
     {
+
+        $current_page = $this->request->getVar('page_transaksi') ? $this->request->getVar('page_transaksi') : 1;
+
+
         $data = [
             'sideBar' => $this->sideBar,
             //'transaksi' => $this->transaksiModel->getTransaksiByJenis($jenis)->paginate(10, 'transaksi'),
@@ -19,6 +23,7 @@ class Transaksi extends BaseController
             'jenis' => $this->jenisModel->getWhere(['slug' => $jenis])->getRowArray(),
             'subkategori' => $this->subkategoriModel->findAll(),
             'validation' => \Config\Services::validation(),
+            'currentPage' => $current_page
         ];
         if (is_null($data['kategori'])) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
@@ -29,27 +34,33 @@ class Transaksi extends BaseController
 
     public function add()
     {
-
         // Prepare Data
         $idJenis = $this->request->getVar('jenis');
         $idKategori = $this->request->getVar('kategori');
-        $idSubKategori = is_null($this->request->getVar('id_subkategori')) ? 0 : $this->request->getVar('id_subkategori');
+        $idSubKategori = empty($this->request->getVar('id_subkategori')) ? NULL :  $this->request->getVar('id_subkategori');
         $jumlah = str_replace(".", "", $this->request->getVar('jumlah'));
-
-
-
 
         // Validasi
 
-        if (!$this->validate([
+        $rules = [
             'keterangan' => 'required',
-            'jumlah' => 'required'
-        ])) {
-            $validation = \Config\Services::validation();
-            return redirect()->to($_SERVER['HTTP_REFERER'])->withInput()->with('validation', $validation);
+            'jumlah' => 'required',
+        ];
+
+        if ($this->request->getFile('buktiTransaksi')) {
+            $rules['buktiTransaksi'] = [
+                'rules' => 'max_size[buktiTransaksi,4096]|is_image[buktiTransaksi]|mime_in[buktiTransaksi,image/png,image/jpg,image/jpeg]',
+                'errors' => [
+                    'is_image' => 'uploaded image file.',
+                    'mime_in' => 'uploaded image file.'
+                ]
+            ];
+        };
+
+
+        if (!$this->validate($rules)) {
+            return redirect()->to($_SERVER['HTTP_REFERER'])->withInput();
         }
-
-
 
         // Add Data
         $this->transaksiModel->transStart();
@@ -64,7 +75,7 @@ class Transaksi extends BaseController
 
         // update transaksi
         $idTransaksi = $this->transaksiModel->insertID();
-        $transaksi = $this->generateTransaksi($idJenis, $idKategori, $idSubKategori, $idTransaksi);
+        $transaksi = $this->generateTransaksi($idJenis, $idKategori, $this->request->getVar('id_subkategori'), $idTransaksi);
         $this->transaksiModel->save(
             [
                 'id' => $idTransaksi,
@@ -72,6 +83,13 @@ class Transaksi extends BaseController
             ]
         );
         $this->transaksiModel->transComplete();
+
+
+        // Upload Transaksi
+        if (!empty($this->request->getFile('buktiTransaksi'))) {
+            $this->upload($this->request->getFile('buktiTransaksi'), "add", $idTransaksi);
+        }
+
 
         session()->setFlashData('pesan', 'Data Berhasil Ditambahkan');
         session()->setFlashData('status', 'success');
@@ -89,5 +107,40 @@ class Transaksi extends BaseController
         $newId = sprintf('%03u', $id);
 
         return $jenis . $newKategori . $newSubKategori . $day . $month . $newId;
+    }
+
+    // Upload 
+
+    public function upload($file = NULL, $from = NULL, $id = null)
+    {
+
+        if (empty($from)) {
+            $file = $this->request->getFile('upload');
+            $id = $this->request->getVar('id');
+            $rules['upload'] = [
+                'rules' => 'uploaded[upload]|max_size[upload,4096]|is_image[upload]|mime_in[upload,image/png,image/jpg,image/jpeg]',
+                'errors' => [
+                    'is_image' => 'uploaded image file.',
+                    'mime_in' => 'uploaded image file.'
+                ]
+            ];
+            if (!$this->validate($rules)) {
+                session()->setFlashData('from', 'upload');
+                return redirect()->to($_SERVER['HTTP_REFERER'])->withInput();
+            }
+        }
+
+        $fileName = $file->getRandomName();
+        $file->move('assets/img/bukti_transaksi', $fileName);
+
+        $this->transaksiModel->save([
+            'id' => $id,
+            'bukti_transaksi' => $fileName
+        ]);
+        if (empty($from)) {
+            session()->setFlashData('pesan', 'Data Berhasil Ditambahkan');
+            session()->setFlashData('status', 'success');
+            return redirect()->to($_SERVER['HTTP_REFERER']);
+        }
     }
 }

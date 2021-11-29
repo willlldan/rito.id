@@ -41,8 +41,8 @@ class Kategori extends BaseController
             'kategori' => 'required|is_unique[kategori.kategori]',
             'id_jenis' => 'required'
         ])) {
-            $validation = \Config\Services::validation();
-            return redirect()->to('/kategori')->withInput()->with('validation', $validation);
+
+            return redirect()->to($_SERVER['HTTP_REFERER'])->withInput();
         }
 
         $slug = url_title($this->request->getVar("kategori"), '-', true);
@@ -56,7 +56,7 @@ class Kategori extends BaseController
         session()->setFlashData('pesan', 'Data Berhasil Ditambahkan');
         session()->setFlashData('status', 'success');
 
-        return redirect()->to('/kategori');
+        return redirect()->to($_SERVER['HTTP_REFERER']);
     }
 
     public function delete($id)
@@ -67,7 +67,7 @@ class Kategori extends BaseController
         session()->setFlashData('pesan', 'Data Berhasil Dihapus');
         session()->setFlashData('status', 'success');
 
-        return redirect()->to('/kategori');
+        return redirect()->to($_SERVER['HTTP_REFERER']);
     }
 
     public function edit($id)
@@ -90,7 +90,7 @@ class Kategori extends BaseController
             'id_jenis' => 'required'
         ])) {
             $validation = \Config\Services::validation();
-            return redirect()->to('/kategori')->withInput()->with('validation', $validation);
+            return redirect()->to($_SERVER['HTTP_REFERER'])->withInput();;
         }
 
         $slug = url_title($this->request->getVar("kategori"), '-', true);
@@ -104,6 +104,6 @@ class Kategori extends BaseController
         session()->setFlashData('pesan', 'Data Berhasil Diubah');
         session()->setFlashData('status', 'success');
 
-        return redirect()->to('/kategori');
+        return redirect()->to($_SERVER['HTTP_REFERER']);
     }
 }

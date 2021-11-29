@@ -39,6 +39,7 @@ $routes->delete('/kategori/(:num)', "Kategori::delete/$1");
 $routes->delete('/subkategori/(:num)', "Subkategori::delete/$1");
 
 $routes->post('/transaksi/add', "Transaksi::add");
+$routes->post('/transaksi/upload', "Transaksi::upload");
 $routes->get('/transaksi/(:segment)', "Transaksi::index/$1");
 $routes->get('/transaksi/(:segment)/(:segment)', "Transaksi::index/$1/$2");
 /*

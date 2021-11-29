@@ -39,8 +39,7 @@ class Jenis extends BaseController
         if (!$this->validate([
             'jenis' => 'required|is_unique[jenis.jenis]'
         ])) {
-            $validation = \Config\Services::validation();
-            return redirect()->to('/jenis')->withInput()->with('validation', $validation);
+            return redirect()->to($_SERVER['HTTP_REFERER'])->withInput();
         }
 
         $slug = url_title($this->request->getVar("jenis"), '-', true);
@@ -52,7 +51,7 @@ class Jenis extends BaseController
         session()->setFlashData('pesan', 'Data Berhasil Ditambahkan');
         session()->setFlashData('status', 'success');
 
-        return redirect()->to('/jenis');
+        return redirect()->to($_SERVER['HTTP_REFERER']);
     }
 
 
@@ -60,17 +59,13 @@ class Jenis extends BaseController
     {
         try {
             $this->jenisModel->delete($id);
-
             session()->setFlashData('pesan', 'Data Berhasil Dihapus');
             session()->setFlashData('status', 'success');
-
-            return redirect()->to('/jenis');
         } catch (Exception $e) {
             session()->setFlashData('pesan', 'Data Gagal Dihapus. ' . ($e->getCode() == 1451 ? 'Data yang dihapus masih berkaitan dengan tabel kategori' : ''));
             session()->setFlashData('status', 'error');
-
-            return redirect()->to('/jenis');
         }
+        return redirect()->to($_SERVER['HTTP_REFERER']);
     }
 
     public function edit($id)

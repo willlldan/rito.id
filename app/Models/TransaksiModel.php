@@ -91,6 +91,7 @@ class TransaksiModel extends Model
         $builder->join('kategori', 'kategori.id = transaksi.id_kategori');
         $builder->join('jenis', 'jenis.id = kategori.id_jenis');
         $builder->where('kategori.slug', $kategori);
+        $builder->orderBy('transaksi.id', 'DESC');
 
 
         return $builder;
