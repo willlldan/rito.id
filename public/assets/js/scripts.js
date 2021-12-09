@@ -581,13 +581,17 @@ $(function() {
 
   // Daterangepicker
   if(jQuery().daterangepicker) {
+    
     if($(".datepicker").length) {
+      console.log('datepicker')
       $('.datepicker').daterangepicker({
         locale: {format: 'YYYY-MM-DD'},
         singleDatePicker: true,
+        
       });
     }
     if($(".datetimepicker").length) {
+      console.log('datetimepicker')
       $('.datetimepicker').daterangepicker({
         locale: {format: 'YYYY-MM-DD HH:mm'},
         singleDatePicker: true,
@@ -596,10 +600,12 @@ $(function() {
       });
     }
     if($(".daterange").length) {
+      console.log('daterange')
       $('.daterange').daterangepicker({
         locale: {format: 'YYYY-MM-DD'},
         drops: 'down',
-        opens: 'right'
+        opens: 'right',
+        autoUpdateInput: true
       });
     }
   }

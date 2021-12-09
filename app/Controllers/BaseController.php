@@ -35,7 +35,7 @@ class BaseController extends Controller
      *
      * @var array
      */
-    protected $helpers = [];
+    protected $helpers = ['auth'];
 
     /**
      * Constructor.
@@ -54,7 +54,7 @@ class BaseController extends Controller
         $this->subkategoriModel = new \App\Models\SubkategoriModel();
         $this->transaksiModel = new \App\Models\TransaksiModel();
 
-        $this->sideBarDanaKeluar = $this->kategoriModel->getKategori()->get()->getResult('array');
+        // $this->sideBarDanaKeluar = $this->kategoriModel->getKategori()->get()->getResult('array');
         $this->sideBar = $this->kategoriModel->getKategori()->get()->getResult('array');
     }
 }

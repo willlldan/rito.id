@@ -14,7 +14,7 @@ class TransaksiModel extends Model
     protected $returnType           = 'array';
     protected $useSoftDeletes       = true;
     protected $protectFields        = true;
-    protected $allowedFields        = ['id_kategori', 'id_sub_kategori', 'id_user', 'transaksi', 'keterangan', 'jumlah', 'bukti_transaksi'];
+    protected $allowedFields        = ['id_kategori', 'id_sub_kategori', 'id_user', 'transaksi', 'keterangan', 'jumlah', 'bukti_transaksi', 'deleted_by', 'deleted_at'];
 
     // Dates
     protected $useTimestamps        = true;
@@ -54,14 +54,21 @@ class TransaksiModel extends Model
         transaksi.jumlah,
         transaksi.bukti_transaksi,
         transaksi.created_at,
+        transaksi.deleted_at,
+        transaksi.deleted_by,
+        users.username,
         kategori.kategori,
         kategori.slug as kategori_slug,
         kategori.id_jenis as id_jenis,
+        subkategori.subkategori,
+        subkategori.slug,
         jenis.slug as jenis_slug,
         jenis.jenis as jenis
         ');
+        $builder->join('users', 'users.id = transaksi.deleted_by', 'left');
         $builder->join('kategori', 'kategori.id = transaksi.id_kategori');
         $builder->join('jenis', 'jenis.id = kategori.id_jenis');
+        $builder->join('subkategori', 'subkategori.id = transaksi.id_sub_kategori', 'left');
         $builder->where('jenis.slug', $jenis);
 
 
@@ -82,16 +89,114 @@ class TransaksiModel extends Model
         transaksi.jumlah,
         transaksi.bukti_transaksi,
         transaksi.created_at,
+        transaksi.deleted_at,
+        transaksi.deleted_by,
+        users.username,
         kategori.kategori,
         kategori.slug as kategori_slug,
         kategori.id_jenis as id_jenis,
+        subkategori.subkategori,
+        subkategori.slug as subkategori_slug,
         jenis.slug as jenis_slug,
         jenis.jenis as jenis
         ');
+        $builder->join('users', 'users.id = transaksi.deleted_by', 'left');
         $builder->join('kategori', 'kategori.id = transaksi.id_kategori');
         $builder->join('jenis', 'jenis.id = kategori.id_jenis');
+        $builder->join('subkategori', 'subkategori.id = transaksi.id_sub_kategori', 'left');
         $builder->where('kategori.slug', $kategori);
         $builder->orderBy('transaksi.id', 'DESC');
+        return $builder;
+    }
+
+    public function getTransaksiBySubKategori($subkategori)
+    {
+
+        $builder = $this->table('transaksi');
+        $builder->select('
+        transaksi.id,
+        transaksi.id_kategori,
+        transaksi.id_sub_kategori,
+        transaksi.id_user,
+        transaksi.transaksi,
+        transaksi.keterangan,
+        transaksi.jumlah,
+        transaksi.bukti_transaksi,
+        transaksi.created_at,
+        transaksi.deleted_at,
+        transaksi.deleted_by,
+        users.username,
+        kategori.kategori,
+        kategori.slug as kategori_slug,
+        kategori.id_jenis as id_jenis,
+        subkategori.subkategori,
+        subkategori.slug as subkategori_slug,
+        jenis.slug as jenis_slug,
+        jenis.jenis as jenis
+        ');
+        $builder->join('users', 'users.id = transaksi.deleted_by', 'left');
+        $builder->join('kategori', 'kategori.id = transaksi.id_kategori');
+        $builder->join('jenis', 'jenis.id = kategori.id_jenis');
+        $builder->join('subkategori', 'subkategori.id = transaksi.id_sub_kategori', 'left');
+        $builder->where('subkategori.slug', $subkategori);
+        $builder->orderBy('transaksi.id', 'DESC');
+        return $builder;
+    }
+
+    public function search($keyword, $kategori, $subkategori = NULL, $date = NULL)
+    {
+        $builder = $this->table('transaksi');
+        $builder->select('
+        transaksi.id,
+        transaksi.id_kategori,
+        transaksi.id_sub_kategori,
+        transaksi.id_user,
+        transaksi.transaksi,
+        transaksi.keterangan,
+        transaksi.jumlah,
+        transaksi.bukti_transaksi,
+        transaksi.created_at,
+        transaksi.deleted_at,
+        transaksi.deleted_by,
+        users.username,
+        kategori.kategori,
+        kategori.slug as kategori_slug,
+        kategori.id_jenis as id_jenis,
+        subkategori.subkategori,
+        subkategori.slug as subkategori_slug,
+        jenis.slug as jenis_slug,
+        jenis.jenis as jenis
+        ');
+        $builder->join('users', 'users.id = transaksi.deleted_by', 'left');
+        $builder->join('kategori', 'kategori.id = transaksi.id_kategori');
+        $builder->join('jenis', 'jenis.id = kategori.id_jenis');
+        $builder->join('subkategori', 'subkategori.id = transaksi.id_sub_kategori', 'left');
+        $builder->where('kategori.slug', $kategori);
+
+        if ($subkategori) {
+            $builder->where('subkategori.slug', $subkategori);
+        }
+
+        if ($date) {
+            $builder->where('transaksi.created_at >=', $date['startDate']);
+            $builder->where('transaksi.created_at <=', $date['endDate']);
+        }
+
+        if ($keyword) {
+            $builder->like('kategori.kategori', $keyword);
+            $builder->orlike('jenis', $keyword);
+            $builder->orlike('transaksi', $keyword);
+            $builder->orlike('keterangan', $keyword);
+            $builder->orlike('jumlah', $keyword);
+            # code...
+        }
+
+        $builder->orderBy('transaksi.id', 'DESC');
+
+        // d($kategori);
+        // d($keyword);
+
+        // dd($this->db->getLastQuery()->getQuery());
 
 
         return $builder;

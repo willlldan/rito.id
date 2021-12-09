@@ -8,16 +8,36 @@ use CodeIgniter\I18n\Time;
 
 class Transaksi extends BaseController
 {
-    public function index($jenis = NULL, $kategori = NULL)
+    public function index($jenis = NULL, $kategori = NULL, $subkategori = NULL)
     {
 
         $current_page = $this->request->getVar('page_transaksi') ? $this->request->getVar('page_transaksi') : 1;
+
+        $keyword = $this->request->getVar('keyword');
+        $date = $this->request->getVar('datepicker');
+        $now = TIME::now();
+
+        if ($date) {
+            $newDate['startDate'] = explode(' - ', $date)[0];
+            $newDate['endDate'] = explode(' - ', $date)[1];
+        } else {
+            $newDate['startDate'] = '2020-01-01';
+            $newDate['endDate'] = $now->toDateString();
+        };
+
+        if ($keyword || $date) {
+            $transaksi = $this->transaksiModel->search($keyword, $kategori, $subkategori, $newDate);
+        } else if ($subkategori) {
+            $transaksi = $this->transaksiModel->getTransaksiBySubKategori($subkategori);
+        } else {
+            $transaksi = $this->transaksiModel->getTransaksiByKategori($kategori);
+        }
 
 
         $data = [
             'sideBar' => $this->sideBar,
             //'transaksi' => $this->transaksiModel->getTransaksiByJenis($jenis)->paginate(10, 'transaksi'),
-            'transaksi' => $this->transaksiModel->getTransaksiByKategori($kategori)->paginate(10, 'transaksi'),
+            'transaksi' => $transaksi->withDeleted()->paginate(50, 'transaksi'),
             'pager' => $this->transaksiModel->pager,
             'kategori' => $this->kategoriModel->getWhere(['slug' => $kategori])->getRowArray(),
             'jenis' => $this->jenisModel->getWhere(['slug' => $jenis])->getRowArray(),
@@ -26,8 +46,10 @@ class Transaksi extends BaseController
             'currentPage' => $current_page
         ];
         if (is_null($data['kategori'])) {
+
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
+        // dd($data['transaksi']);
         return view('transaksi/transaksi', $data);
     }
 
@@ -67,7 +89,7 @@ class Transaksi extends BaseController
         $this->transaksiModel->insert([
             'id_kategori' => $idKategori,
             'id_sub_kategori' => $idSubKategori,
-            'id_user' => $this->request->getVar('idUser'),
+            'id_user' => user_id(),
             'keterangan' => $this->request->getVar('keterangan'),
             'jumlah' => $jumlah,
             'bukti_transaksi' => $this->request->getVar('buktiTransaksi'),
@@ -86,8 +108,10 @@ class Transaksi extends BaseController
 
 
         // Upload Transaksi
-        if (!empty($this->request->getFile('buktiTransaksi'))) {
-            $this->upload($this->request->getFile('buktiTransaksi'), "add", $idTransaksi);
+        if ($this->request->getFile('buktiTransaksi')) {
+            if (!$this->request->getFile('buktiTransaksi')->getError()) {
+                $this->upload($this->request->getFile('buktiTransaksi'), "add", $idTransaksi);
+            }
         }
 
 
@@ -142,5 +166,20 @@ class Transaksi extends BaseController
             session()->setFlashData('status', 'success');
             return redirect()->to($_SERVER['HTTP_REFERER']);
         }
+    }
+
+    public function delete($id)
+    {
+        // $this->transaksiModel->delete($id);
+
+        $this->transaksiModel->save([
+            'id' => $id,
+            'deleted_at' => TIME::now(),
+            'deleted_by' => user_id()
+        ]);
+
+        session()->setFlashData('pesan', 'Data Berhasil Dihapus');
+        session()->setFlashData('status', 'success');
+        return redirect()->to($_SERVER['HTTP_REFERER']);
     }
 }

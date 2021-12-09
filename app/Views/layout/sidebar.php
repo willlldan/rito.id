@@ -10,9 +10,9 @@
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
             <li class="nav-item dropdown active">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-fire"></i><span>Dashboard</span></a>
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-fire"></i><span>Dashboard</span></a>
                 <ul class="dropdown-menu">
-                    <li class="active"><a class="nav-link" href="/">General Dashboard</a></li>
+                    <li class=""><a class="nav-link" href="/">General Dashboard</a></li>
                     <li><a class="nav-link" href="#">Laporan</a></li>
                     <li><a class="nav-link" href="#">Daftar Kategori</a></li>
                 </ul>
@@ -55,17 +55,19 @@
                 </ul>
             </li>
 
-            <li class="menu-header">Utilities</li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-toolbox"></i> <span>Utilities</span></a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="<?= base_url() ?>/jenis">Jenis Transaksi</a></li>
-                    <li><a class="nav-link" href="<?= base_url() ?>/kategori">Kategori</a></li>
-                    <li><a class="nav-link" href="<?= base_url() ?>/subkategori">Sub Kategori</a></li>
+            <?php if (in_groups('superadmin') || in_groups('bendahara')) : ?>
+                <li class="menu-header">Utilities</li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-toolbox"></i> <span>Utilities</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-link" href="<?= base_url() ?>/jenis">Jenis Transaksi</a></li>
+                        <li><a class="nav-link" href="<?= base_url() ?>/kategori">Kategori</a></li>
+                        <li><a class="nav-link" href="<?= base_url() ?>/subkategori">Sub Kategori</a></li>
 
 
-                </ul>
-            </li>
+                    </ul>
+                </li>
+            <?php endif ?>
 
 
     </aside>

@@ -1,6 +1,7 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content'); ?>
 
+
 <!-- Main Content -->
 <div class="main-content">
     <section class="section">

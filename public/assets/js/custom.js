@@ -23,6 +23,12 @@ if (swal) {
 
 }
 
+// Mini taskbar
+
+$(window).on('load', function() {
+  $('.active .dropdown-menu').addClass('d-none')
+ });
+
 
 $('.btn-delete').on('click', function(e) {
     e.preventDefault();
@@ -172,6 +178,8 @@ $('#detailModal').on('show.bs.modal', function (event) {
   var keterangan = button.data('keterangan') 
   var jumlah = 'Rp. ' +  numberWithCommas(button.data('jumlah')) 
   var bukti = button.data('bukti') 
+  var url = button.data('url') 
+  var user = button.data('user')
 
 
  
@@ -184,15 +192,18 @@ $('#detailModal').on('show.bs.modal', function (event) {
   modal.find('#detailTanggal').text(tanggal)
   modal.find('#detailKeterangan').text(keterangan)
   modal.find('#detailJumlah').text(jumlah)
-
+  modal.find('#detailUser').text(user)
+  
+  
   modal.find('.kosong').addClass('d-none')
   modal.find('.ada').addClass('d-none')
-
+  
   if(!bukti) {
     modal.find('.kosong').addClass('d-block')
     modal.find('.ada').removeClass('d-block')
     modal.find('#upload-btn').attr('data-id', id)
   } else {
+    modal.find('.bukti-transaksi').attr('src', url + bukti)
     modal.find('.ada').addClass('d-block')
     modal.find('.kosong').removeClass('d-block')
 
@@ -221,6 +232,26 @@ function previewImg(id) {
   }
 
 }
+
+
+// find by date
+$('.daterange-cus').daterangepicker({
+  autoUpdateInput: 'true',
+  autoApply: 'true',
+  locale: {format: 'YYYY-MM-DD'},
+  drops: 'down',
+  opens: 'right',
+});
+
+$('.daterange-cus').on('hide.daterangepicker', function(ev, picker) {
+  console.log(picker.startDate.format('YYYY-MM-DD'));
+  console.log(picker.endDate.format('YYYY-MM-DD'));
+  console.log($('input#datepicker').val())
+});
+
+$('.daterange-cus').on('apply.daterangepicker', function(ev, picker) {
+  $('#findByDate').submit()
+});
 
 // Auto Numbering
 

@@ -32,16 +32,18 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
-$routes->get('/jenis', 'Jenis::index');
-$routes->post('/jenis/add', 'Jenis::add');
-$routes->delete('/jenis/(:num)', "Jenis::delete/$1");
-$routes->delete('/kategori/(:num)', "Kategori::delete/$1");
-$routes->delete('/subkategori/(:num)', "Subkategori::delete/$1");
+$routes->get('/jenis', 'Jenis::index', ['filter' => 'role:superadmin,bendahara']);
+$routes->post('/jenis/add', 'Jenis::add', ['filter' => 'role:superadmin,bendahara']);
+$routes->delete('/jenis/(:num)', "Jenis::delete/$1", ['filter' => 'role:superadmin,bendahara']);
+$routes->delete('/kategori/(:num)', "Kategori::delete/$1", ['filter' => 'role:superadmin,bendahara']);
+$routes->delete('/subkategori/(:num)', "Subkategori::delete/$1", ['filter' => 'role:superadmin,bendahara']);
 
-$routes->post('/transaksi/add', "Transaksi::add");
-$routes->post('/transaksi/upload', "Transaksi::upload");
+$routes->post('/transaksi/add', "Transaksi::add", ['filter' => 'role:superadmin,bendahara']);
+$routes->post('/transaksi/upload', "Transaksi::upload", ['filter' => 'role:superadmin,bendahara']);
+$routes->delete('/transaksi/(:num)', "Transaksi::delete/$1", ['filter' => 'role:superadmin,bendahara']);
 $routes->get('/transaksi/(:segment)', "Transaksi::index/$1");
 $routes->get('/transaksi/(:segment)/(:segment)', "Transaksi::index/$1/$2");
+$routes->get('/transaksi/(:segment)/(:segment)/(:segment)', "Transaksi::index/$1/$2/$3");
 /*
  * --------------------------------------------------------------------
  * Additional Routing

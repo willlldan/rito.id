@@ -53,7 +53,8 @@ $(".pwstrength").pwstrength();
 $('.daterange-cus').daterangepicker({
   locale: {format: 'YYYY-MM-DD'},
   drops: 'down',
-  opens: 'right'
+  opens: 'right',
+  autoUpdateInput: true,
 });
 $('.daterange-btn').daterangepicker({
   ranges: {

@@ -1,6 +1,5 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content'); ?>
-
 <!-- Main Content -->
 <div class="main-content">
     <section class="section">
@@ -11,26 +10,34 @@
                         <h4><?= $jenis['jenis'] . " - " . $kategori['kategori'] ?></h4>
                         <div class="card-header-form">
                             <div class="form-row">
-                                <div class="form-group col-md-3">
-                                    <button href="" class="btn btn-primary btn-icon icon-left" id="add" data-toggle="modal" data-target="#formTransaksiModal" data-title="Tambah Data" data-link="add"><i class="fas fa-plus"></i> Tambah Data</button>
-                                </div>
-                                <div class="form-group col-md-5">
-                                    <div class="input-group datepickercustom">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-calendar"></i>
+                                <?php if (in_groups('superadmin') || in_groups('bendahara')) : ?>
+                                    <div class="form-group col-md-3">
+                                        <button href="" class="btn btn-primary btn-icon icon-left" id="add" data-toggle="modal" data-target="#formTransaksiModal" data-title="Tambah Data" data-link="add"><i class="fas fa-plus"></i> Tambah Data</button>
+                                    </div>
+                                <?php endif ?>
+                                <div class="form-group <?= (in_groups('superadmin') || in_groups('bendahara')) ? 'col-md-5' : 'col-md-6' ?>">
+
+                                    <form action="" class="d-inline" method="get" id="findByDate">
+                                        <div class="input-group datepickercustom">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-calendar"></i>
+                                                </div>
                                             </div>
+                                            <input type="text" class="form-control daterange-cus" name="datepicker" id="datepicker">
+
                                         </div>
-                                        <input type="text" class="form-control daterange-cus">
-                                    </div>
+                                        <form action="" class="d-inline" method="get">
                                 </div>
-                                <div class="form-group col-md-4">
+                                <div class="form-group <?= (in_groups('superadmin') || in_groups('bendahara')) ? 'col-md-4' : 'col-md-6' ?> ">
+                                    <!-- <form action="" class="d-inline" method="get"> -->
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Search">
+                                        <input type="text" class="form-control" placeholder="Search" name="keyword" id="keyword">
                                         <div class="input-group-btn">
-                                            <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                                            <button type="submit" class="btn btn-primary" id="btn-search"><i class="fas fa-search"></i></button>
                                         </div>
                                     </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -64,27 +71,23 @@
                                         <th>Sub Kategori</th>
                                         <th>Jumlah</th>
                                         <!-- <th>User</th> -->
-                                        <th style="width: 18%;">Action</th>
+                                        <th>Action</th>
                                     </tr>
                                     <?php $i = 1 + (10 * ($currentPage - 1)); ?>
                                     <?php foreach ($transaksi as $tr) : ?>
-                                        <tr align="center">
+                                        <tr align="center" <?= $tr['deleted_at'] ? 'class="table-secondary"' : '' ?>>
                                             <td><?= $i++ ?></td>
                                             <td><?= explode(" ", $tr['created_at'])[0] ?></td>
                                             <td><?= $tr['transaksi'] ?></td>
                                             <td><?= $tr['keterangan'] ?></td>
                                             <td class="align-middle">
-                                                <?php if ($tr['id_sub_kategori']) {
+                                                <?php $labelSub = $tr['subkategori'] ? $tr['subkategori'] : "-" ?>
+                                                <?php if ($tr['subkategori']) : ?>
+                                                    <a href="<?= base_url('transaksi') . "/" . $tr['jenis_slug'] . "/" . $tr['kategori_slug'] . "/"  .  $tr['subkategori_slug'] ?>"><?= $labelSub ?></a>
+                                                <?php else : ?>
+                                                    -
+                                                <?php endif ?>
 
-                                                    $idSub = array_search($tr['id_sub_kategori'], array_column($subkategori, 'id'));
-
-                                                    $labelSub = $subkategori[$idSub]['subkategori'];
-                                                } else {
-                                                    $labelSub = "-";
-                                                }
-                                                echo $labelSub
-
-                                                ?>
                                             </td>
 
                                             <td>
@@ -95,22 +98,29 @@
                                             </td> -->
                                             <td>
                                                 <div class="row">
-                                                    <div class="col-md-4">
-                                                        <button class="btn btn-primary" data-toggle="modal" data-target="#detailModal" data-id="<?= $tr['id'] ?>" data-jenis="<?= $jenis['jenis'] ?>" data-kategori="<?= $kategori['kategori'] ?>" data-subkategori="<?= $labelSub ?>" data-transaksi="<?= $tr['transaksi'] ?>" data-tanggal="<?= $tr['created_at'] ?>" data-keterangan="<?= $tr['keterangan'] ?>" data-jumlah="<?= $tr['jumlah'] ?>" data-bukti="<?= $tr['bukti_transaksi'] ?>">
+                                                    <?php $col = $tr['jenis_slug'] == 'dana-masuk' ? 'col-md-12' : 'col-md-4'  ?>
+                                                    <?php if ($tr['jenis_slug'] != 'dana-masuk') : ?>
+                                                        <div class="<?= $col ?>">
+                                                            <button class="btn btn-primary" data-toggle="modal" data-target="#detailModal" data-id="<?= $tr['id'] ?>" data-jenis="<?= $jenis['jenis'] ?>" data-kategori="<?= $kategori['kategori'] ?>" data-subkategori="<?= $labelSub ?>" data-transaksi="<?= $tr['transaksi'] ?>" data-tanggal="<?= $tr['created_at'] ?>" data-keterangan="<?= $tr['keterangan'] ?>" data-jumlah="<?= $tr['jumlah'] ?>" data-bukti="<?= $tr['bukti_transaksi'] ?>" data-url="<?= base_url() ?>/assets/img/bukti_transaksi/" data-user="<?= $tr['username'] ?>">
 
 
-                                                            <i class="fas fa-info-circle" data-toggle="tooltip" title="Detail"></i></button>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <button class="btn btn-warning" data-toggle="modal" data-target="#formUploadModal" data-id='<?= $tr['id'] ?>'>
-                                                            <i class="fas fa-arrow-circle-up" data-toggle="tooltip" title="Upload Bukti Transaksi"></i></button>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <form action="/kategori/<?= $tr['id'] ?>" method="post" class="d-inline">
-                                                            <?= csrf_field() ?>
-                                                            <input type="hidden" name="_method" value="DELETE">
-                                                            <button type="submit" class="btn btn-danger btn-delete"><i class="fas fa-trash" data-toggle="tooltip" title="Hapus Data"></i></button>
-                                                        </form>
+                                                                <i class="fas fa-info-circle" data-toggle="tooltip" title="Detail"></i></button>
+                                                        </div>
+                                                        <div class="<?= $col ?>">
+                                                            <button class="btn btn-warning" data-toggle="modal" data-target="#formUploadModal" data-id='<?= $tr['id'] ?>' <?= in_groups('superadmin') || in_groups('bendahara') ? '' : 'disabled' ?>>
+                                                                <i class="fas fa-arrow-circle-up" data-toggle="tooltip" title="Upload Bukti Transaksi"></i></button>
+                                                        </div>
+                                                    <?php endif ?>
+                                                    <div class="<?= $col ?>">
+                                                        <?php if ($tr['deleted_at']) : ?>
+                                                            <button type="submit" class="btn btn-secondary btn-delete" disabled><i class="fas fa-trash" data-toggle="tooltip" title="Deleted By <?= $tr['username'] ?> at <?= $tr['deleted_at'] ?>"></i></button>
+                                                        <?php else : ?>
+                                                            <form action="/transaksi/<?= $tr['id'] ?>" method="post" class="d-inline">
+                                                                <?= csrf_field() ?>
+                                                                <input type="hidden" name="_method" value="DELETE">
+                                                                <button type="submit" class="btn btn-danger btn-delete" <?= in_groups('superadmin') || in_groups('bendahara') ? '' : 'disabled' ?>><i class="fas fa-trash" data-toggle="tooltip" title="Hapus Data"></i></button>
+                                                            </form>
+                                                        <?php endif ?>
 
                                                     </div>
 
@@ -206,7 +216,7 @@
     </div>
 </div>
 
-<!-- Detail Upload -->
+<!-- Detail Modal -->
 
 <div class="modal fade" tabindex="-1" role="dialog" id="detailModal">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -221,44 +231,43 @@
                 <table class="table">
                     <tr>
                         <td>Transaksi</td>
-                        <td id="detailTransaksi">3333333 </td>
+                        <td id="detailTransaksi"> </td>
                     </tr>
                     <tr>
                         <td>Jenis</td>
-                        <td id="detailJenis">3333333 </td>
+                        <td id="detailJenis"> </td>
                     </tr>
                     <tr>
                         <td>Kategori</td>
-                        <td id="detailKategori">3333333 </td>
+                        <td id="detailKategori"> </td>
                     </tr>
                     <tr>
                         <td>Sub Kategori</td>
-                        <td id="detailSubKategori">3333333 </td>
+                        <td id="detailSubKategori"> </td>
                     </tr>
                     <tr>
                         <td>Tanggal Transaksi</td>
-                        <td id="detailTanggal">3333333 </td>
+                        <td id="detailTanggal"> </td>
                     </tr>
                     <tr>
                         <td>Keterangan</td>
-                        <td id="detailKeterangan">3333333 </td>
+                        <td id="detailKeterangan"> </td>
                     </tr>
                     <tr>
                         <td>Jumlah</td>
                         <td id="detailJumlah"> </td>
                     </tr>
-                    <!-- <tr>
+                    <tr>
                         <td>Ditambahkan Oleh</td>
                         <td id="detailUser"> </td>
-                    </tr> -->
+                    </tr>
                 </table>
 
                 <h6>Bukti Transaksi</h6>
 
                 <div class="chocolat-parent ada">
                     <div class="text-center">
-                        <!-- <img src="<?= base_url() ?>/assets/img/default.png" class="img-fluid bukti-transaksi"> -->
-                        <img src="<?= base_url() ?>/assets/img/bukti_transaksi/1638086558_29dd6752a7ed9ce1bc29.png" class="img-fluid bukti-transaksi">
+                        <img src="<?= base_url() ?>/assets/img/defaut.png" class="img-fluid bukti-transaksi">
                     </div>
                 </div>
 
@@ -268,7 +277,11 @@
                             <i class="fas fa-question"></i>
                         </div>
                         <h2>Bukti Transaksi Belum Ditambahkan</h2>
-                        <button href="" class="btn btn-primary btn-icon icon-left mt-4" id="upload-btn" data-toggle="modal" data-target="#formUploadModal" data-title="Tambah Data" data-link="/kategori/add"><i class="fas fa-plus"></i> Upload Bukti Transaksi</button>
+
+                        <?php if (in_groups('superadmin') || in_groups('bendahara')) : ?>
+
+                            <button href="" class="btn btn-primary btn-icon icon-left mt-4" id="upload-btn" data-toggle="modal" data-target="#formUploadModal" data-title="Tambah Data" data-link="/kategori/add"><i class="fas fa-plus"></i> Upload Bukti Transaksi</button>
+                        <?php endif ?>
                     </div>
                 </div>
 
