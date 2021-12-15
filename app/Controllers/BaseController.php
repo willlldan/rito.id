@@ -53,6 +53,7 @@ class BaseController extends Controller
         $this->kategoriModel = new \App\Models\KategoriModel();
         $this->subkategoriModel = new \App\Models\SubkategoriModel();
         $this->transaksiModel = new \App\Models\TransaksiModel();
+        $this->userModel = new \Myth\Auth\Models\UserModel();
 
         // $this->sideBarDanaKeluar = $this->kategoriModel->getKategori()->get()->getResult('array');
         $this->sideBar = $this->kategoriModel->getKategori()->get()->getResult('array');

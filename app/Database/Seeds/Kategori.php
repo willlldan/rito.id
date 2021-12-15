@@ -82,14 +82,14 @@ class Kategori extends Seeder
                 'updated_at' => null
             ],
             [
-                'id_jenis' => 2,
+                'id_jenis' => 1,
                 'kategori' => 'Non Regular',
                 'slug'    => 'non-regular',
                 'created_at' => TIME::now(),
                 'updated_at' => null
             ],
             [
-                'id_jenis' => 2,
+                'id_jenis' => 1,
                 'kategori' => 'Laboratorium',
                 'slug'    => 'laboratorium',
                 'created_at' => TIME::now(),

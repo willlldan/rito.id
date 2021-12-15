@@ -193,11 +193,39 @@ class TransaksiModel extends Model
 
         $builder->orderBy('transaksi.id', 'DESC');
 
-        // d($kategori);
-        // d($keyword);
 
-        // dd($this->db->getLastQuery()->getQuery());
+        return $builder;
+    }
 
+
+    // $id = id_jenis
+    // 1 = dana-masuk
+    // 2 = dana-keluar
+    public function sum($id, $year, $month)
+    {
+        $builder = $this->table('transaksi');
+        $builder->selectSum('jumlah');
+        $builder->join('kategori', 'kategori.id = transaksi.id_kategori');
+        $builder->where('id_jenis', $id);
+        $builder->where('deleted_at', NULL);
+        $builder->where('MONTH(`transaksi`.`created_at`)', $month);
+        $builder->where('YEAR(`transaksi`.`created_at`)', $year);
+
+        return $builder;
+    }
+
+    public function sumByKategori($id, $year, $month)
+    {
+        $builder = $this->table('transaksi');
+        $builder->select('`transaksi`.`id_kategori`');
+        $builder->select('`kategori`.`kategori`');
+        $builder->selectSum('jumlah');
+        $builder->join('kategori', 'kategori.id = transaksi.id_kategori');
+        $builder->where('id_jenis', $id);
+        $builder->where('deleted_at', NULL);
+        $builder->where('MONTH(`transaksi`.`created_at`)', $month);
+        $builder->where('YEAR(`transaksi`.`created_at`)', $year);
+        $builder->groupBy('`kategori`.`kategori`');
 
         return $builder;
     }

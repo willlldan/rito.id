@@ -52,3 +52,9 @@ input[type=number] {
 .bukti-transaksi {
     max-width: 75%;
 }
+
+/* Navbar */
+
+.navbar-bg {
+    height: 200px;
+}

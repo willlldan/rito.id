@@ -42,6 +42,7 @@ class Transaksi extends BaseController
             'kategori' => $this->kategoriModel->getWhere(['slug' => $kategori])->getRowArray(),
             'jenis' => $this->jenisModel->getWhere(['slug' => $jenis])->getRowArray(),
             'subkategori' => $this->subkategoriModel->findAll(),
+            'user' => $this->userModel->select('id, username')->get()->getResultArray(),
             'validation' => \Config\Services::validation(),
             'currentPage' => $current_page
         ];
@@ -49,7 +50,11 @@ class Transaksi extends BaseController
 
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
-        // dd($data['transaksi']);
+        // d(array_column($data['user'], 'id'));
+        // d(array_search(NULL, array_column($data['user'], 'id')));
+        // $key = array_search('1', array_column($data['user'], 'id'));
+        // d($data['user'][$key]);
+        // dd($data['user']);
         return view('transaksi/transaksi', $data);
     }
 

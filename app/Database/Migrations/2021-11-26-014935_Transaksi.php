@@ -26,7 +26,8 @@ class Transaksi extends Migration
             'id_user'            => [
                 'type'           => 'INT',
                 'constraint'     => 11,
-                'null'  => TRUE
+                'null'  => TRUE,
+                'unsigned' => true,
             ],
             'transaksi'       => [
                 'type'       => 'CHAR',
@@ -60,12 +61,16 @@ class Transaksi extends Migration
             'deleted_by' => [
                 'type' => 'INT',
                 'constraint'  => 11,
-                'null'  => TRUE
+                'null'  => TRUE,
+                'unsigned' => true,
             ],
+
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('id_sub_kategori', 'subkategori', 'id');
         $this->forge->addForeignKey('id_kategori', 'kategori', 'id');
+        $this->forge->addForeignKey('id_sub_kategori', 'subkategori', 'id');
+        $this->forge->addForeignKey('deleted_by', 'users', 'id');
+        $this->forge->addForeignKey('id_user', 'users', 'id');
         $this->forge->createTable('transaksi');
     }
 

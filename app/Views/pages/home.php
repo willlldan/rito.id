@@ -1,10 +1,40 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content'); ?>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.js"></script>
+
+<?php
+// $key = array_search(1, array_column($chartDanaKeluar, 'id_kategori'));
+
+// d($chartDanaKeluar[$key]);
+
+// d(array_search(1, array_column($chartDanaKeluar, 'id_kategori')));
+$dataChart = "";
+foreach ($kategoriDanaKeluar as $k) {
+
+    $key = array_search($k['id'], array_column($chartDanaKeluar, 'id_kategori'));
+    $dataChart .=  $key || $key === 0 ? $chartDanaKeluar[$key]['jumlah'] . "," : 0 . ",";
+}
+
+// dd($dataChart);
+
+?>
+
 
 <!-- Main Content -->
 <div class="main-content">
     <section class="section">
+        <div class="form-row">
+            <div class="col-12">
+                <div class="d-flex justify-content-end">
+                    <form action="" method="get" id="formMonth">
+                        <div class="form-group">
+                            <input type="month" class="form-control" value="<?= $now ?>" name="month" id="monthDashboard">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-lg-4 col-md-4 col-sm-12">
                 <div class="card card-statistic-2">
@@ -16,7 +46,7 @@
                             <h4>Saldo</h4>
                         </div>
                         <div class="card-body">
-                            Rp. 500.000.000,-
+                            Rp. <?= number_format($saldo, 0, ',', '.') ?>,-
                         </div>
                     </div>
                 </div>
@@ -31,7 +61,7 @@
                             <h4>Dana Masuk</h4>
                         </div>
                         <div class="card-body">
-                            Rp. 750.000.000,-
+                            Rp. <?= number_format($danaMasuk, 0, ',', '.') ?>,-
                         </div>
                     </div>
                 </div>
@@ -46,7 +76,7 @@
                             <h4>Dana Keluar</h4>
                         </div>
                         <div class="card-body">
-                            Rp. 250.000.000,-
+                            Rp. <?= number_format($danaKeluar, 0, ',', '.') ?>,-
                         </div>
                     </div>
                 </div>
@@ -57,15 +87,102 @@
             <div class="col-lg-8">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Budget vs Sales</h4>
+                        <h4>Dana Keluar</h4>
                     </div>
                     <div class="card-body">
-                        <canvas id="myChart" height="158"></canvas>
+                        <canvas id="danaKeluar" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Dana Masuk</h4>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="danaMasuk" height="200"></canvas>
                     </div>
                 </div>
             </div>
 
         </div>
+
+        <!-- Chart danaMasuk -->
+        <script>
+            // dana Masuk
+            var ctx = document.getElementById("danaMasuk");
+            var myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    // labels: ["Red", "Blue", "Yellow", ],
+                    labels: [
+                        <?php foreach ($chartDanaMasuk as $label) {
+                            echo "\"" . $label['kategori'] . "\"" . ", ";
+                        } ?>
+                    ],
+                    datasets: [{
+                        label: 'C1',
+                        data: [
+                            <?php foreach ($chartDanaMasuk as $label) {
+                                echo  $label['jumlah'] .  ", ";
+                            } ?>
+                        ],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+
+            });
+
+            //Dana Keluar
+
+            // Generate data
+
+            <?php
+
+
+            ?>
+
+            var chartDanaKeluar = document.getElementById("danaKeluar");
+            var myChart = new Chart(chartDanaKeluar, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        <?php foreach ($kategoriDanaKeluar as $key => $value) {
+                            echo "\"C" . ($key + 1) . "\", ";
+                        } ?>
+                    ],
+                    datasets: [{
+                        label: 'Dana Keluar',
+                        data: [<?= $dataChart ?>],
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255,99,132,1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                color: 'rgb(255, 99, 132)'
+                            },
+                            position: 'bottom'
+                        }
+                    }
+                }
+
+            });
+        </script>
 
 
     </section>

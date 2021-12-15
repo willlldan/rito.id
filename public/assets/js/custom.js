@@ -253,6 +253,10 @@ $('.daterange-cus').on('apply.daterangepicker', function(ev, picker) {
   $('#findByDate').submit()
 });
 
+$('#monthDashboard').on('change', function() {
+  $('#formMonth').submit()
+})
+
 // Auto Numbering
 
 new AutoNumeric('#jumlah', {

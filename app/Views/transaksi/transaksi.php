@@ -100,8 +100,11 @@
                                                 <div class="row">
                                                     <?php $col = $tr['jenis_slug'] == 'dana-masuk' ? 'col-md-12' : 'col-md-4'  ?>
                                                     <?php if ($tr['jenis_slug'] != 'dana-masuk') : ?>
+                                                        <?php $key = array_search($tr['id_user'], array_column($user, 'id'));
+                                                        ?>
+
                                                         <div class="<?= $col ?>">
-                                                            <button class="btn btn-primary" data-toggle="modal" data-target="#detailModal" data-id="<?= $tr['id'] ?>" data-jenis="<?= $jenis['jenis'] ?>" data-kategori="<?= $kategori['kategori'] ?>" data-subkategori="<?= $labelSub ?>" data-transaksi="<?= $tr['transaksi'] ?>" data-tanggal="<?= $tr['created_at'] ?>" data-keterangan="<?= $tr['keterangan'] ?>" data-jumlah="<?= $tr['jumlah'] ?>" data-bukti="<?= $tr['bukti_transaksi'] ?>" data-url="<?= base_url() ?>/assets/img/bukti_transaksi/" data-user="<?= $tr['username'] ?>">
+                                                            <button class="btn btn-primary" data-toggle="modal" data-target="#detailModal" data-id="<?= $tr['id'] ?>" data-jenis="<?= $jenis['jenis'] ?>" data-kategori="<?= $kategori['kategori'] ?>" data-subkategori="<?= $labelSub ?>" data-transaksi="<?= $tr['transaksi'] ?>" data-tanggal="<?= $tr['created_at'] ?>" data-keterangan="<?= $tr['keterangan'] ?>" data-jumlah="<?= $tr['jumlah'] ?>" data-bukti="<?= $tr['bukti_transaksi'] ?>" data-url="<?= base_url() ?>/assets/img/bukti_transaksi/" data-user="<?= $user[$key]['username'] ?>">
 
 
                                                                 <i class="fas fa-info-circle" data-toggle="tooltip" title="Detail"></i></button>
