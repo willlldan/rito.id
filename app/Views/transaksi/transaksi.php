@@ -27,16 +27,17 @@
                                             <input type="text" class="form-control daterange-cus" name="datepicker" id="datepicker">
 
                                         </div>
-                                        <form action="" class="d-inline" method="get">
+                                    </form>
+                                    <!-- <form action="" class="d-inline" method="get"> -->
                                 </div>
                                 <div class="form-group <?= (in_groups('superadmin') || in_groups('bendahara')) ? 'col-md-4' : 'col-md-6' ?> ">
-                                    <!-- <form action="" class="d-inline" method="get"> -->
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Search" name="keyword" id="keyword">
-                                        <div class="input-group-btn">
-                                            <button type="submit" class="btn btn-primary" id="btn-search"><i class="fas fa-search"></i></button>
+                                    <form action="" class="d-inline" method="get">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Search" name="keyword" id="keyword">
+                                            <div class="input-group-btn">
+                                                <button type="submit" class="btn btn-primary" id="btn-search"><i class="fas fa-search"></i></button>
+                                            </div>
                                         </div>
-                                    </div>
                                     </form>
                                 </div>
                             </div>

@@ -22,6 +22,7 @@ class Jenis extends BaseController
 
         $data = [
             'title' => "Jenis Transaksi",
+            'active' => 'utilities',
             'jenis' => $jenis->paginate(10, 'jenis'),
             'pager' => $this->jenisModel->pager,
             'currentPage' => $current_page,

@@ -14,7 +14,12 @@ class TransaksiModel extends Model
     protected $returnType           = 'array';
     protected $useSoftDeletes       = true;
     protected $protectFields        = true;
-    protected $allowedFields        = ['id_kategori', 'id_sub_kategori', 'id_user', 'transaksi', 'keterangan', 'jumlah', 'bukti_transaksi', 'deleted_by', 'deleted_at'];
+    protected $allowedFields        = [
+        'id_kategori',
+        'id_sub_kategori', 'id_user', 'transaksi',
+        'keterangan', 'jumlah', 'bukti_transaksi',
+        'deleted_by', 'deleted_at'
+    ];
 
     // Dates
     protected $useTimestamps        = true;
@@ -70,6 +75,7 @@ class TransaksiModel extends Model
         $builder->join('jenis', 'jenis.id = kategori.id_jenis');
         $builder->join('subkategori', 'subkategori.id = transaksi.id_sub_kategori', 'left');
         $builder->where('jenis.slug', $jenis);
+        $builder->orderBy('transaksi.id', 'DESC');
 
 
         return $builder;

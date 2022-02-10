@@ -14,19 +14,19 @@ class Jenis extends Seeder
             [
                 'jenis' => 'Dana Masuk',
                 'slug'    => 'dana-masuk',
-                'created_at' => TIME::now(),
+                'created_at' => TIME::now('Asia/Jakarta'),
                 'updated_at' => null
             ],
             [
                 'jenis' => 'Dana Keluar',
                 'slug'    => 'dana-keluar',
-                'created_at' => TIME::now(),
+                'created_at' => TIME::now('Asia/Jakarta'),
                 'updated_at' => null
             ],
             [
                 'jenis' => 'Saldo',
                 'slug'    => 'saldo',
-                'created_at' => TIME::now(),
+                'created_at' => TIME::now('Asia/Jakarta'),
                 'updated_at' => null
             ],
         ];

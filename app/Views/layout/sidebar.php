@@ -9,21 +9,20 @@
         </div>
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
-            <li class="nav-item dropdown active">
+            <li class="nav-item dropdown <?= $active == 'home' ? 'active' : '' ?>">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-fire"></i><span>Dashboard</span></a>
                 <ul class="dropdown-menu">
                     <li class=""><a class="nav-link" href="/">General Dashboard</a></li>
-                    <li><a class="nav-link" href="#">Laporan</a></li>
-                    <li><a class="nav-link" href="#">Daftar Kategori</a></li>
+                    <li><a class="nav-link" href="<?= base_url() ?>/laporan">Laporan</a></li>
                 </ul>
             </li>
             <li class="menu-header">Dana Masuk</li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown <?= $active == 'dana-masuk' ? 'active' : '' ?>">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-money-bill-wave"></i><span>Dana Masuk</span></a>
                 <ul class="dropdown-menu">
                     <?php foreach ($sideBar as $sb) : ?>
                         <?php if ($sb['jenis_slug'] == 'dana-masuk') :  ?>
-                            <li><a class="nav-link" href="<?= base_url() . "/transaksi/" . $sb['jenis_slug'] .  "/" . $sb['slug'] ?>"><?= $sb['kategori'] ?></a></li>
+                            <li class="<?= $sb['slug'] == $title ? 'active' : '' ?>"><a class="nav-link" href="<?= base_url() . "/transaksi/" . $sb['jenis_slug'] .  "/" . $sb['slug'] ?>"><?= $sb['kategori'] ?></a></li>
                         <?php endif ?>
                     <?php endforeach ?>
                 </ul>
@@ -31,13 +30,13 @@
 
 
             <li class="menu-header">Dana Keluar</li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown <?= $active == 'dana-keluar' ? 'active' : '' ?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-share"></i> <span>Dana Keluar</span></a>
                 <ul class="dropdown-menu">
 
                     <?php foreach ($sideBar as $sb) : ?>
                         <?php if ($sb['jenis_slug'] == 'dana-keluar') :  ?>
-                            <li><a class="nav-link" href="<?= base_url() . "/transaksi/" . $sb['jenis_slug'] .  "/" . $sb['slug'] ?>"><?= $sb['kategori'] ?></a></li>
+                            <li <?= $sb['slug'] == $title ? 'active' : '' ?>><a class="nav-link" href="<?= base_url() . "/transaksi/" . $sb['jenis_slug'] .  "/" . $sb['slug'] ?>"><?= $sb['kategori'] ?></a></li>
                         <?php endif ?>
                     <?php endforeach ?>
 
@@ -57,10 +56,10 @@
 
             <?php if (in_groups('superadmin') || in_groups('bendahara')) : ?>
                 <li class="menu-header">Utilities</li>
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown <?= $active == 'utilities' ? 'active' : '' ?>">
                     <a href="#" class="nav-link has-dropdown"><i class="fas fa-toolbox"></i> <span>Utilities</span></a>
                     <ul class="dropdown-menu">
-                        <li><a class="nav-link" href="<?= base_url() ?>/jenis">Jenis Transaksi</a></li>
+                        <li><a class="nav-link active" href="<?= base_url() ?>/jenis">Jenis Transaksi</a></li>
                         <li><a class="nav-link" href="<?= base_url() ?>/kategori">Kategori</a></li>
                         <li><a class="nav-link" href="<?= base_url() ?>/subkategori">Sub Kategori</a></li>
 

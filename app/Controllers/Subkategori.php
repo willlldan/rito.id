@@ -22,6 +22,7 @@ class Subkategori extends BaseController
 
         $data = [
             'title' => "Subkategori Transaksi",
+            'active' => 'utilities',
             'subkategori' => $subkategori->paginate(10, 'subkategori'),
             'pager' => $this->subkategoriModel->pager,
             'kategori' => $this->kategoriModel->getKategori()->get()->getResultArray(),

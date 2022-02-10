@@ -16,24 +16,24 @@ class Users extends Seeder
                 'username' => 'admin',
                 'password_hash' => Password::hash('pasundan'),
                 'active' => '1',
-                'created_at' => TIME::now(),
-                'updated_at' => TIME::now()
+                'created_at' => TIME::now('Asia/Jakarta'),
+                'updated_at' => TIME::now('Asia/Jakarta')
             ],
             [
                 'email' => 'bendahara@unpas.ac.id',
                 'username' => 'Bendahara',
                 'password_hash' => Password::hash('pasundan'),
                 'active' => '1',
-                'created_at' => TIME::now(),
-                'updated_at' => TIME::now()
+                'created_at' => TIME::now('Asia/Jakarta'),
+                'updated_at' => TIME::now('Asia/Jakarta')
             ],
             [
                 'email' => 'kaprodi@unpas.ac.id',
                 'username' => 'kaprodi',
                 'password_hash' => Password::hash('pasundan'),
                 'active' => '1',
-                'created_at' => TIME::now(),
-                'updated_at' => TIME::now()
+                'created_at' => TIME::now('Asia/Jakarta'),
+                'updated_at' => TIME::now('Asia/Jakarta')
             ],
 
 

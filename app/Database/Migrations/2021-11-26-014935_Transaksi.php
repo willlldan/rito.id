@@ -31,7 +31,7 @@ class Transaksi extends Migration
             ],
             'transaksi'       => [
                 'type'       => 'CHAR',
-                'constraint' => '12',
+                'constraint' => '14',
             ],
             'keterangan'       => [
                 'type'       => 'VARCHAR',

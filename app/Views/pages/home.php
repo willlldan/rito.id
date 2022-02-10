@@ -4,19 +4,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.js"></script>
 
 <?php
-// $key = array_search(1, array_column($chartDanaKeluar, 'id_kategori'));
 
-// d($chartDanaKeluar[$key]);
-
-// d(array_search(1, array_column($chartDanaKeluar, 'id_kategori')));
 $dataChart = "";
 foreach ($kategoriDanaKeluar as $k) {
 
     $key = array_search($k['id'], array_column($chartDanaKeluar, 'id_kategori'));
     $dataChart .=  $key || $key === 0 ? $chartDanaKeluar[$key]['jumlah'] . "," : 0 . ",";
 }
-
-// dd($dataChart);
 
 ?>
 
@@ -29,7 +23,7 @@ foreach ($kategoriDanaKeluar as $k) {
                 <div class="d-flex justify-content-end">
                     <form action="" method="get" id="formMonth">
                         <div class="form-group">
-                            <input type="month" class="form-control" value="<?= $now ?>" name="month" id="monthDashboard">
+                            <input type="month" class="form-control" value="<?= $month ? $month : $now ?>" name="month" id="monthDashboard">
                         </div>
                     </form>
                 </div>
@@ -92,6 +86,27 @@ foreach ($kategoriDanaKeluar as $k) {
                     <div class="card-body">
                         <canvas id="danaKeluar" height="200"></canvas>
                     </div>
+                    <div class="card-footer">
+                        <div class="row">
+
+                            <div class="col-6">
+                                <p><?= sizeof($kategoriDanaKeluar) ?></p>
+                                <?php foreach ($kategoriDanaKeluar as $k => $val) : ?>
+                                    <?php if ($k <= sizeof($kategoriDanaKeluar) / 2) : ?>
+                                        <p><span class="bg-primary text-white p-2 mr-1 rounded"><?= "C" . ($k + 1) ?></span>: <?= $val['kategori'] ?></p>
+                                    <?php endif ?>
+                                <?php endforeach ?>
+                            </div>
+                            <div class="col-6">
+                                <p><?= sizeof($kategoriDanaKeluar) ?></p>
+                                <?php foreach ($kategoriDanaKeluar as $k => $val) : ?>
+                                    <?php if ($k >= sizeof($kategoriDanaKeluar) / 2) : ?>
+                                        <p><span class="bg-primary text-white p-2 mr-1 rounded"><?= "C" . ($k + 1) ?></span>: <?= $val['kategori'] ?></p>
+                                    <?php endif ?>
+                                <?php endforeach ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-4">
@@ -100,7 +115,7 @@ foreach ($kategoriDanaKeluar as $k) {
                         <h4>Dana Masuk</h4>
                     </div>
                     <div class="card-body">
-                        <canvas id="danaMasuk" height="200"></canvas>
+                        <canvas id="danaMasuk" height="300"></canvas>
                     </div>
                 </div>
             </div>
@@ -164,8 +179,8 @@ foreach ($kategoriDanaKeluar as $k) {
                     datasets: [{
                         label: 'Dana Keluar',
                         data: [<?= $dataChart ?>],
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255,99,132,1)',
+                        backgroundColor: 'rgba(103, 119, 239, 0.5)',
+                        borderColor: 'rgba(103, 119, 239, 1)',
                         borderWidth: 1
                     }]
                 },

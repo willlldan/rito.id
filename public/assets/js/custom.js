@@ -25,9 +25,9 @@ if (swal) {
 
 // Mini taskbar
 
-$(window).on('load', function() {
-  $('.active .dropdown-menu').addClass('d-none')
- });
+// $(window).on('load', function() {
+//   $('.active .dropdown-menu').addClass('d-none')
+//  });
 
 
 $('.btn-delete').on('click', function(e) {

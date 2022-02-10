@@ -22,6 +22,7 @@ class Kategori extends BaseController
 
         $data = [
             'title' => "Kategori Transaksi",
+            'active' => 'utilities',
             // 'kategori' => $this->kategoriModel->getKategori(),
             'kategori' => $kategori->paginate(10, 'kategori'),
             'pager' => $this->kategoriModel->pager,

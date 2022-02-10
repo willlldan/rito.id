@@ -15,21 +15,21 @@ class Subkategori extends Seeder
                 'id_kategori' => 1,
                 'subkategori' => 'Persiapan Kegiatan',
                 'slug'    => 'persiapan-kegiatan',
-                'created_at' => TIME::now(),
+                'created_at' => TIME::now('Asia/Jakarta'),
                 'updated_at' => null
             ],
             [
                 'id_kategori' => 1,
                 'subkategori' => 'Pendanaan Kegiatan',
                 'slug'    => 'pendanaan-kegiatan',
-                'created_at' => TIME::now(),
+                'created_at' => TIME::now('Asia/Jakarta'),
                 'updated_at' => null
             ],
             [
                 'id_kategori' => 2,
                 'subkategori' => 'Persiapan Kegiatan Penelitian',
                 'slug'    => 'persiapan-kegiatan-penelitian',
-                'created_at' => TIME::now(),
+                'created_at' => TIME::now('Asia/Jakarta'),
                 'updated_at' => null
             ],
 
